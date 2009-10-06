@@ -1,22 +1,19 @@
-## Date Modified Field
+# Date Modified Field
 
-	Version: 1.0
-	Author: craig zheng
-	Build Date: 5th October 2009
-	Requirements: Symphony 2.*
-	
+- Version: 1.0
+- Author: craig zheng
+- Build Date: 5th October 2009
+- Requirements: Symphony 2.*
 
 A simple extension of the built-in date field that will record the time an entry is saved.
 
-
-### Installation
+## Installation
 
 1. Upload the 'datemodified' folder in this archive to your Symphony 'extensions' folder.
 
 2. Enable it by selecting the "Field: Date Modified", choose Enable from the with-selected menu, then click Apply. You can now add the "Date Modified" field to your sections.
 
-
-### Usage
+## Usage
 
 When you add the field to a section, the only available option is a checkbox to indicate whether or not the field should be manually editable: 
 	

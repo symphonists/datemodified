@@ -4,15 +4,32 @@
 	
 		public function about(){
 			return array('name' => 'Field: Date Modified',
-						 'version' => '1.0',
-						 'release-date' => '2009-10-05',
+						 'version' => '1.1',
+						 'release-date' => '2011-02-09',
 						 'author' => array('name' => 'craig zheng',
-										   'email' => 'cz@mongrl.com')
+										   'email' => 'craig@symphony-cms.com')
 				 		);
 		}
 		
 		public function uninstall(){
 			$this->_Parent->Database->query("DROP TABLE `tbl_fields_datemodified`");
+		}
+		
+		public function update($previousVersion){
+
+			try{
+				if(version_compare($previousVersion, '1.1', '<')){
+					Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_datemodified`
+						ADD COLUMN `mode` enum('normal','disabled','hidden')
+						NOT NULL
+						DEFAULT 'normal'"
+					);
+				}
+			}
+			catch(Exception $e){
+				// Discard
+			}
 		}
 
 		public function install(){
@@ -23,6 +40,7 @@
 				`field_id` int(11) unsigned NOT NULL,
 				`pre_populate` enum('yes','no') NOT NULL default 'yes',
 				`editable` enum('yes','no') NOT NULL default 'no',
+				'mode' enum('normal','disabled','hidden') NOT NULL default 'normal',
 				PRIMARY KEY  (`id`),
 				KEY `field_id` (`field_id`)
 			) TYPE=MyISAM;");

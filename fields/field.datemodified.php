@@ -17,14 +17,47 @@
 		
 		public function displaySettingsPanel(&$wrapper, $errors = null) {
 			Field::displaySettingsPanel($wrapper, $errors);
-
-			$label = Widget::Label();
-			$input = Widget::Input('fields['.$this->get('sortorder').'][editable]', 'yes', 'checkbox');
-			if($this->get('editable') == 'yes') $input->setAttribute('checked', 'checked');
-			$label->setValue(__('%s Allow this field to be edited manually', array($input->generate())));
-			$wrapper->appendChild($label);		
 			
-			$this->appendShowColumnCheckbox($wrapper);
+		// Check 'mode' exists; otherwise set manually from 'editable'
+			$mode = $this->get('mode');
+			
+			if(!$mode) {
+				if($this->get('editable') == 'yes') {
+					$mode = 'normal';
+				}
+				else {
+					$mode = 'hidden';
+				}
+			}
+
+			$div = new XMLElement('div', NULL, array('class' => 'compact'));
+			
+			$label = Widget::Label(__('Display As'));
+			
+			$options = array(
+				array(
+					'normal',
+					($mode == 'normal' ? TRUE : FALSE),
+					__('Editable')
+				),
+				array(
+					'disabled',
+					($mode == 'disabled' ? TRUE : FALSE),
+					__('Disabled')
+				),
+				array(
+					'hidden',
+					($mode == 'hidden' ? TRUE : FALSE),
+					__('Hidden')
+				)
+			);
+			$input = Widget::Select('fields['.$this->get('sortorder').'][mode]', $options);
+			
+			$label->appendChild($input);
+			$div->appendChild($label);		
+			
+			$this->appendShowColumnCheckbox($div);
+			$wrapper->appendChild($div);
 		}
 		
 		function commit(){
@@ -39,19 +72,40 @@
 
 			$fields['field_id'] = $id;
 			$fields['pre_populate'] = ($this->get('pre_populate') ? $this->get('pre_populate') : 'no');
-			$fields['editable'] = ($this->get('editable') ? $this->get('editable') : 'no');
+			$fields['mode'] = ($this->get('mode') ? $this->get('mode') : 'normal');
 			
-			$this->_engine->Database->query("DELETE FROM `tbl_fields_datemodified` WHERE `field_id` = '$id' LIMIT 1");			
-			return $this->_engine->Database->insert($fields, 'tbl_fields_datemodified');
+			Symphony::Database()->query("DELETE FROM `tbl_fields_datemodified` WHERE `field_id` = '$id' LIMIT 1");			
+			return Symphony::Database()->insert($fields, 'tbl_fields_datemodified');
 		}
 		
 		function displayPublishPanel(&$wrapper, $data = null, $error = null, $prefix = null, $postfix = null) {
-			if ($this->get('editable') == 'yes') {
+			
+		// Check 'mode' exists; otherwise set manually from 'editable'
+			$mode = $this->get('mode');
+			
+			if(!$mode) {
+				if($this->get('editable') == 'yes') {
+					$mode = 'normal';
+				}
+				else {
+					$mode = 'hidden';
+				}
+			}
+			
+		// Render the field only if it's not hidden
+			if ($mode != 'hidden') {
+			
 				$name = $this->get('element_name');
 				$value = DateTimeObj::get(__SYM_DATETIME_FORMAT__, null);
 			
 				$label = Widget::Label($this->get('label'));
-				$label->appendChild(Widget::Input("fields{$prefix}[{$name}]{$name}", $value));
+				$input = Widget::Input("fields{$prefix}[{$name}]{$name}", $value);
+
+				if($mode == 'disabled') {
+					$input->setAttribute('disabled');
+				}
+				
+				$label->appendChild($input);
 				$label->setAttribute('class', 'date');
 			
 				if (!is_null($error)) {
@@ -67,11 +121,11 @@
 			$timestamp = null;
 			
 			if (is_null($data) || $data == '') {
-				$timestamp = strtotime(DateTimeObj::get(__SYM_DATETIME_FORMAT__, null));
+				$timestamp = strtotime(Lang::standardizeDate(DateTimeObj::get(__SYM_DATETIME_FORMAT__, null)));
 			}
 			
 			else  {
-				$timestamp = strtotime($data);
+				$timestamp = strtotime(Lang::standardizeDate($data));
 			}
 			
 			if (!is_null($timestamp)) {

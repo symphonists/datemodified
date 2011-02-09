@@ -1,8 +1,8 @@
 # Date Modified Field
 
-- Version: 1.0
+- Version: 1.1
 - Author: craig zheng
-- Build Date: 5th October 2009
+- Build Date: 9th February 2011
 - Requirements: Symphony 2.*
 
 A simple extension of the built-in date field that will record the time an entry is saved.
@@ -20,3 +20,7 @@ When you add the field to a section, the only available option is a checkbox to 
 - Unchecked (default): the field will not be displayed in the entry publishing screen and the value of the field will be automatically set when the entry is saved.
 
 - Checked: the field will appear (pre-populated with the current timestamp as of page load) and its value will be used when the entry is saved.
+
+## Changelog
+
+- **1.1** Update for 2.2; Revamp display options

@@ -1,6 +1,6 @@
 # Date Modified Field
 
-- Version: 1.1
+- Version: 1.2
 - Author: craig zheng
 - Build Date: 9th February 2011
 - Requirements: Symphony 2.*
@@ -23,4 +23,5 @@ When you add the field to a section, the only available option is a checkbox to 
 
 ## Changelog
 
+- **1.2** Fix an incomplete commit
 - **1.1** Update for 2.2; Revamp display options

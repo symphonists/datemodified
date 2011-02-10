@@ -4,7 +4,7 @@
 	
 		public function about(){
 			return array('name' => 'Field: Date Modified',
-						 'version' => '1.1',
+						 'version' => '1.2',
 						 'release-date' => '2011-02-09',
 						 'author' => array('name' => 'craig zheng',
 										   'email' => 'craig@symphony-cms.com')
@@ -12,7 +12,7 @@
 		}
 		
 		public function uninstall(){
-			$this->_Parent->Database->query("DROP TABLE `tbl_fields_datemodified`");
+			Symphony::Database()->query("DROP TABLE `tbl_fields_datemodified`");
 		}
 		
 		public function update($previousVersion){
@@ -34,7 +34,7 @@
 
 		public function install(){
 
-			return $this->_Parent->Database->query("CREATE TABLE 	
+			return Symphony::Database()->query("CREATE TABLE 	
 			`tbl_fields_datemodified` (	
 				`id` int(11) unsigned NOT NULL auto_increment,
 				`field_id` int(11) unsigned NOT NULL,

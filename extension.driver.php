@@ -4,8 +4,8 @@
 	
 		public function about(){
 			return array('name' => 'Field: Date Modified',
-						 'version' => '1.2',
-						 'release-date' => '2011-02-09',
+						 'version' => '1.2.1',
+						 'release-date' => '2011-03-02',
 						 'author' => array('name' => 'craig zheng',
 										   'email' => 'craig@symphony-cms.com')
 				 		);
@@ -40,7 +40,7 @@
 				`field_id` int(11) unsigned NOT NULL,
 				`pre_populate` enum('yes','no') NOT NULL default 'yes',
 				`editable` enum('yes','no') NOT NULL default 'no',
-				'mode' enum('normal','disabled','hidden') NOT NULL default 'normal',
+				`mode` enum('normal','disabled','hidden') NOT NULL default 'normal',
 				PRIMARY KEY  (`id`),
 				KEY `field_id` (`field_id`)
 			) TYPE=MyISAM;");

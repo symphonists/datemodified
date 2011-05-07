@@ -4,8 +4,8 @@
 	
 		public function about(){
 			return array('name' => 'Field: Date Modified',
-						 'version' => '1.2.1',
-						 'release-date' => '2011-03-02',
+						 'version' => '1.2.2',
+						 'release-date' => '2011-05-06',
 						 'author' => array('name' => 'craig zheng',
 										   'email' => 'craig@symphony-cms.com')
 				 		);

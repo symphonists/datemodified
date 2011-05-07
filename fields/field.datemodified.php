@@ -96,13 +96,19 @@
 			if ($mode != 'hidden') {
 			
 				$name = $this->get('element_name');
-				$value = DateTimeObj::get(__SYM_DATETIME_FORMAT__, null);
+				
+				$edited_local = DateTimeObj::get(__SYM_DATETIME_FORMAT__, $data['local']);
+				$current_local = DateTimeObj::get(__SYM_DATETIME_FORMAT__, null);
 			
 				$label = Widget::Label($this->get('label'));
-				$input = Widget::Input("fields{$prefix}[{$name}]{$name}", $value);
 
 				if($mode == 'disabled') {
-					$input->setAttribute('disabled');
+					$input = Widget::Input("{$name}-display", $edited_local);
+					$input->setAttribute('disabled', 'disabled');
+				} else {
+					$note = new XMLElement('i', __('Previous value: %s', array($edited_local)));
+					$label->appendChild($note);
+					$input = Widget::Input("fields{$prefix}[{$name}]{$name}", $current_local);
 				}
 				
 				$label->appendChild($input);

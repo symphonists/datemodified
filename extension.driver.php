@@ -2,15 +2,6 @@
 
 	Class extension_datemodified extends Extension{
 	
-		public function about(){
-			return array('name' => 'Field: Date Modified',
-						 'version' => '1.2.2',
-						 'release-date' => '2011-05-06',
-						 'author' => array('name' => 'craig zheng',
-										   'email' => 'craig@symphony-cms.com')
-				 		);
-		}
-		
 		public function uninstall(){
 			Symphony::Database()->query("DROP TABLE `tbl_fields_datemodified`");
 		}
@@ -43,7 +34,7 @@
 				`mode` enum('normal','disabled','hidden') NOT NULL default 'normal',
 				PRIMARY KEY  (`id`),
 				KEY `field_id` (`field_id`)
-			) TYPE=MyISAM;");
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
 
 		}
 			

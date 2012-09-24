@@ -9,8 +9,8 @@
 		Definition:
 	-------------------------------------------------------------------------*/
 	
-		public function __construct(&$parent){
-			Field::__construct($parent);
+		public function __construct(){
+			Field::__construct();
 			$this->_name = 'Date Modified';
 			$this->_required = true;
 		}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension id="datemodified" status="released" xmlns="http://symphony-cms.com/schemas/extension/1.0">
+	<name>Date Modified Field</name>
+	<description>A simple extension of the built-in date field that will record the time an entry is saved. Can choose to display as an editable field, a disabled field, or not to display it at all.</description>
+	<repo type="github">https://github.com/symphonists/datemodified</repo>
+	<url type="discuss">http://getsymphony.com/discuss/thread/30443/</url>
+	<types>
+		<type>Field Types</type>
+	</types>
+	<authors>
+		<author>
+			<name github="symphonists" symphony="community">Symphony Community</name>
+		</author>
+	</authors>
+	<releases>
+		<release version="1.2.2" max="2.2.5"/>
+	</releases>
+</extension>

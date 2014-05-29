@@ -17,6 +17,37 @@
 						DEFAULT 'normal'"
 					);
 				}
+				if(version_compare($previousVersion, '1.4', '<')){
+					// Drop `local`/`gmt` from Date fields, add `date` column. #693
+					$date_fields = Symphony::Database()->fetchCol("field_id", "SELECT `field_id` FROM `tbl_fields_datemodified`");
+
+					foreach($date_fields as $id) {
+						$table = 'tbl_entries_data_' . $id;
+
+						// Don't catch an Exception, we should halt updating if something goes wrong here
+						// Add the new `date` column for Date fields
+						if(!Symphony::Database()->tableContainsField($table, 'date')) {
+							Symphony::Database()->query("ALTER TABLE `" . $table . "` ADD `date` DATETIME DEFAULT NULL");
+							Symphony::Database()->query("CREATE INDEX `date` ON `" . $table . "` (`date`)");
+						}
+
+						if(Symphony::Database()->tableContainsField($table, 'date')) {
+							// Populate new Date column
+							if(Symphony::Database()->query("UPDATE `" . $table . "` SET date = CONVERT_TZ(SUBSTRING(value, 1, 19), SUBSTRING(value, -6), '+00:00')")) {
+								// Drop the `local`/`gmt` columns from Date fields
+								if(Symphony::Database()->tableContainsField($table, 'local')) {
+									Symphony::Database()->query("ALTER TABLE `" . $table . "` DROP `local`;");
+								}
+
+								if(Symphony::Database()->tableContainsField($table, 'gmt')) {
+									Symphony::Database()->query("ALTER TABLE `" . $table . "` DROP `gmt`;");
+								}
+							}
+						}
+
+						Symphony::Database()->query("OPTIMIZE TABLE " . $table);
+					}
+				}
 			}
 			catch(Exception $e){
 				// Discard

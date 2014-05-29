@@ -137,15 +137,13 @@
 			if (!is_null($timestamp)) {
 				return array(
 					'value' => DateTimeObj::get('c', $timestamp),
-					'local' => strtotime(DateTimeObj::get('c', $timestamp)),
-					'gmt' => strtotime(DateTimeObj::getGMT('c', $timestamp))			
+					'date' => DateTimeObj::getGMT('Y-m-d H:i:s', $timestamp)			
 				);
 			}
 			
 			return array(
 				'value'		=> null,
-				'local'		=> null,
-				'gmt'		=> null
+				'date'		=> null
 			);
 		}
 		

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension id="datemodified" status="released" xmlns="http://symphony-cms.com/schemas/extension/1.0">
+<extension id="datemodified" status="released" xmlns="http://getsymphony.com/schemas/extension/1.0">
 	<name>Date Modified Field</name>
 	<description>A simple extension of the built-in date field that will record the time an entry is saved. Can choose to display as an editable field, a disabled field, or not to display it at all.</description>
 	<repo type="github">https://github.com/symphonists/datemodified</repo>
@@ -13,6 +13,10 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="1.4.1" date="2014-10-31" min="2.3">
+			* Use `Widget::Error` instead of `wrapFormElementWithError`
+			* Other minor updates
+		</release>
 		<release version="1.4" date="2014-01-25" min="2.3">
 			* Compatibility with Date Field introduced in 2.3
 		</release>

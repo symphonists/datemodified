@@ -2,25 +2,25 @@
 
 	require_once(TOOLKIT . "/fields/field.date.php");
 	if (!defined('__IN_SYMPHONY__')) die('<h2>Symphony Error</h2><p>You cannot directly access this file</p>');
-	
+
 	Class fieldDateModified extends fieldDate {
-	
+
 	/*-------------------------------------------------------------------------
 		Definition:
 	-------------------------------------------------------------------------*/
-	
+
 		public function __construct(){
 			Field::__construct();
 			$this->_name = 'Date Modified';
 			$this->_required = true;
 		}
-		
-		public function displaySettingsPanel(&$wrapper, $errors = null) {
+
+		public function displaySettingsPanel(XMLElement &$wrapper, $errors = null) {
 			Field::displaySettingsPanel($wrapper, $errors);
-			
+
 		// Check 'mode' exists; otherwise set manually from 'editable'
 			$mode = $this->get('mode');
-			
+
 			if(!$mode) {
 				if($this->get('editable') == 'yes') {
 					$mode = 'normal';
@@ -31,9 +31,9 @@
 			}
 
 			$div = new XMLElement('div', NULL, array('class' => 'compact'));
-			
+
 			$label = Widget::Label(__('Display As'));
-			
+
 			$options = array(
 				array(
 					'normal',
@@ -52,37 +52,36 @@
 				)
 			);
 			$input = Widget::Select('fields['.$this->get('sortorder').'][mode]', $options);
-			
+
 			$label->appendChild($input);
-			$div->appendChild($label);		
-			
+			$div->appendChild($label);
+
 			$this->appendShowColumnCheckbox($div);
 			$wrapper->appendChild($div);
 		}
-		
-		function commit(){
-			
+
+		public function commit() {
+
 			if(!Field::commit()) return false;
-			
+
 			$id = $this->get('id');
 
-			if($id === false) return false;	
-			
+			if($id === false) return false;
+
 			$fields = array();
 
 			$fields['field_id'] = $id;
 			$fields['pre_populate'] = ($this->get('pre_populate') ? $this->get('pre_populate') : 'no');
 			$fields['mode'] = ($this->get('mode') ? $this->get('mode') : 'normal');
-			
-			Symphony::Database()->query("DELETE FROM `tbl_fields_datemodified` WHERE `field_id` = '$id' LIMIT 1");			
-			return Symphony::Database()->insert($fields, 'tbl_fields_datemodified');
+
+			return FieldManager::saveSettings($id, $fields);
 		}
-		
-		function displayPublishPanel(&$wrapper, $data = null, $error = null, $prefix = null, $postfix = null) {
-			
+
+		public function displayPublishPanel(XMLElement &$wrapper, $data = null, $flagWithError = null, $fieldnamePrefix = null, $fieldnamePostfix = null, $entry_id = null) {
+
 		// Check 'mode' exists; otherwise set manually from 'editable'
 			$mode = $this->get('mode');
-			
+
 			if(!$mode) {
 				if($this->get('editable') == 'yes') {
 					$mode = 'normal';
@@ -91,15 +90,15 @@
 					$mode = 'hidden';
 				}
 			}
-			
+
 		// Render the field only if it's not hidden
 			if ($mode != 'hidden') {
-			
+
 				$name = $this->get('element_name');
-				
+
 				$edited_local = DateTimeObj::get(__SYM_DATETIME_FORMAT__, $data['local']);
 				$current_local = DateTimeObj::get(__SYM_DATETIME_FORMAT__, null);
-			
+
 				$label = Widget::Label($this->get('label'));
 
 				if($mode == 'disabled') {
@@ -108,43 +107,43 @@
 				} else {
 					$note = new XMLElement('i', __('Previous value: %s', array($edited_local)));
 					$label->appendChild($note);
-					$input = Widget::Input("fields{$prefix}[{$name}]{$name}", $current_local);
+					$input = Widget::Input("fields{$fieldnamePrefix}[{$name}]", $current_local);
 				}
-				
+
 				$label->appendChild($input);
 				$label->setAttribute('class', 'date');
-			
-				if (!is_null($error)) {
-					$label = Widget::wrapFormElementWithError($label, $error);
+
+				if (!is_null($flagWithError)) {
+					$label = Widget::Error($label, $error);
 				}
-			
+
 				$wrapper->appendChild($label);
 			}
 		}
-		
-		public function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL){
+
+		public function processRawFieldData($data, &$status, &$message = null, $simulate = false, $entry_id = null) {
 			$status = self::__OK__;
 			$timestamp = null;
-			
+
 			if (is_null($data) || $data == '') {
 				$timestamp = strtotime(Lang::standardizeDate(DateTimeObj::get(__SYM_DATETIME_FORMAT__, null)));
 			}
-			
-			else  {
+
+			else {
 				$timestamp = strtotime(Lang::standardizeDate($data));
 			}
-			
+
 			if (!is_null($timestamp)) {
 				return array(
 					'value' => DateTimeObj::get('c', $timestamp),
-					'date' => DateTimeObj::getGMT('Y-m-d H:i:s', $timestamp)			
+					'date' => DateTimeObj::getGMT('Y-m-d H:i:s', $timestamp)
 				);
 			}
-			
+
 			return array(
 				'value'		=> null,
 				'date'		=> null
 			);
 		}
-		
+
 	}
